@@ -1,0 +1,75 @@
+<h2>Saldos de clientes</h2>
+
+<div class="filtros">
+  <mat-form-field appearance="outline" class="filtro">
+    <mat-label>Buscar cliente</mat-label>
+    <input matInput [(ngModel)]="filtro" />
+  </mat-form-field>
+
+  <mat-checkbox [(ngModel)]="soloConSaldo">Solo con saldo pendiente</mat-checkbox>
+</div>
+
+@if (!cargando() && saldosFiltrados().length > 0) {
+  <div class="resumen-totales">
+    <div class="resumen-item">
+      <span class="etiqueta">Cargos totales</span>
+      <span class="valor">{{ totalCargos() | currency: 'MXN' }}</span>
+    </div>
+    <div class="resumen-item">
+      <span class="etiqueta">Pagos totales</span>
+      <span class="valor">{{ totalPagos() | currency: 'MXN' }}</span>
+    </div>
+    <div class="resumen-item destacado">
+      <span class="etiqueta">Por cobrar</span>
+      <span class="valor">{{ totalSaldoPendiente() | currency: 'MXN' }}</span>
+    </div>
+  </div>
+}
+
+@if (cargando()) {
+  <p>Cargando...</p>
+} @else if (saldosFiltrados().length === 0) {
+  <p>No hay clientes.</p>
+} @else {
+  <mat-accordion>
+    @for (s of saldosFiltrados(); track s.cliente_id) {
+      <mat-expansion-panel (opened)="verHistorial(s.cliente_id)">
+        <mat-expansion-panel-header>
+          <mat-panel-title>{{ s.nombre }}</mat-panel-title>
+          <mat-panel-description [class.deudor]="s.saldo > 0">
+            Saldo: {{ s.saldo | currency: 'MXN' }}
+          </mat-panel-description>
+        </mat-expansion-panel-header>
+
+        <div class="detalle-saldo">
+          <p>Cargos por remisiones: {{ s.total_cargos | currency: 'MXN' }}</p>
+          <p>Pagos recibidos: {{ s.total_pagos | currency: 'MXN' }}</p>
+        </div>
+
+        <h4>Historial de pagos</h4>
+        @if (historialDe(s.cliente_id).length === 0) {
+          <p class="sin-pagos">Sin pagos registrados.</p>
+        } @else {
+          <ul class="lista-pagos">
+            @for (p of historialDe(s.cliente_id); track p.id) {
+              <li>
+                <span>
+                  {{ p.fecha | date: 'dd/MM/yyyy' }} — {{ p.monto | currency: 'MXN' }}
+                  @if (p.forma_pago) { ({{ p.forma_pago }}) }
+                </span>
+                <button mat-icon-button (click)="eliminarPago(p)" aria-label="Borrar pago">
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </li>
+            }
+          </ul>
+        }
+
+        <button mat-flat-button color="primary" (click)="registrarPago(s)">
+          <mat-icon>add</mat-icon>
+          Registrar pago
+        </button>
+      </mat-expansion-panel>
+    }
+  </mat-accordion>
+}

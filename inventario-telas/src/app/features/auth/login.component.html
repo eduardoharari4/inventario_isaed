@@ -1,0 +1,50 @@
+<div class="login-page">
+  <mat-card class="login-card">
+    <div class="login-logo">
+      <mat-icon>checkroom</mat-icon>
+    </div>
+    <mat-card-header>
+      <mat-card-title>Inventario de Telas</mat-card-title>
+      <mat-card-subtitle>
+        {{ modo() === 'login' ? 'Iniciar sesión' : 'Crear cuenta (solo con invitación)' }}
+      </mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-card-content>
+      <form (ngSubmit)="submit()" class="login-form">
+        @if (modo() === 'signup') {
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Nombre</mat-label>
+            <input matInput [(ngModel)]="nombre" name="nombre" required />
+          </mat-form-field>
+        }
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Correo</mat-label>
+          <input matInput type="email" [(ngModel)]="email" name="email" required />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Contraseña</mat-label>
+          <input matInput type="password" [(ngModel)]="password" name="password" required minlength="6" />
+        </mat-form-field>
+
+        @if (error()) {
+          <p class="mensaje">{{ error() }}</p>
+        }
+
+        <button mat-flat-button color="primary" type="submit" class="full-width" [disabled]="cargando()">
+          @if (cargando()) {
+            <mat-spinner diameter="20"></mat-spinner>
+          } @else {
+            {{ modo() === 'login' ? 'Entrar' : 'Registrarme' }}
+          }
+        </button>
+      </form>
+
+      <button mat-button class="full-width toggle-btn" (click)="toggleModo()">
+        {{ modo() === 'login' ? '¿No tienes cuenta? Regístrate' : '¿Ya tienes cuenta? Inicia sesión' }}
+      </button>
+    </mat-card-content>
+  </mat-card>
+</div>

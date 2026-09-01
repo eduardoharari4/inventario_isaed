@@ -1,0 +1,46 @@
+.ayuda {
+  color: var(--mat-sys-on-surface-variant, #555);
+  margin-top: -8px;
+}
+
+.invitar-card {
+  margin-bottom: 20px;
+}
+
+.invitar-form {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+}
+
+.lista {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.fila {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 4px 8px;
+}
+
+.rol-tag {
+  margin-left: 8px;
+  font-size: 0.8rem;
+  color: var(--mat-sys-on-surface-variant, #666);
+}
+
+.fecha {
+  margin: 2px 0 0;
+  font-size: 0.8rem;
+  color: var(--mat-sys-on-surface-variant, #666);
+}
+
+.rol-select {
+  width: 140px;
+  margin-bottom: -1.25em;
+}

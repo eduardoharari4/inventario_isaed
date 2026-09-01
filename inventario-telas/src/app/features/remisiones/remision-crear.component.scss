@@ -1,0 +1,59 @@
+.datos-card {
+  margin-bottom: 16px;
+}
+
+.datos-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+
+  mat-form-field {
+    flex: 1 1 220px;
+  }
+}
+
+.grupo-card {
+  margin-bottom: 12px;
+}
+
+.rollos-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.precio-venta {
+  display: block;
+  max-width: 220px;
+  margin-top: 8px;
+}
+
+.subtotal-tela {
+  margin: 4px 0 0;
+  font-weight: 600;
+}
+
+.totales-card {
+  margin-top: 16px;
+  position: sticky;
+  bottom: 8px;
+}
+
+.linea-total {
+  display: flex;
+  justify-content: space-between;
+  padding: 2px 0;
+}
+
+.linea-total.total {
+  font-weight: 700;
+  font-size: 1.1rem;
+  border-top: 1px solid rgba(0, 0, 0, 0.12);
+  margin-top: 4px;
+  padding-top: 8px;
+}
+
+.full-width {
+  width: 100%;
+  margin-top: 12px;
+}

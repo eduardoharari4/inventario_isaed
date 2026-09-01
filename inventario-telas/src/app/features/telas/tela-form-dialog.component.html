@@ -1,0 +1,28 @@
+<h2 mat-dialog-title>Nueva tela</h2>
+<mat-dialog-content>
+  <form class="form">
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Nombre</mat-label>
+      <input matInput [(ngModel)]="nombre" name="nombre" required />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Composición</mat-label>
+      <input matInput [(ngModel)]="composicion" name="composicion" placeholder="ej. 100% poliéster" />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Precio de costo por metro</mat-label>
+      <input matInput type="number" min="0" step="0.01" [(ngModel)]="precioCosto" name="precioCosto" required />
+      <span matTextPrefix>$&nbsp;</span>
+    </mat-form-field>
+
+    @if (error()) {
+      <p class="error">{{ error() }}</p>
+    }
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close [disabled]="guardando()">Cancelar</button>
+  <button mat-flat-button color="primary" (click)="guardar()" [disabled]="guardando()">Guardar</button>
+</mat-dialog-actions>

@@ -1,0 +1,74 @@
+<div class="header-row">
+  <h2>Telas e inventario</h2>
+  <button mat-flat-button color="primary" (click)="abrirNuevaTela()">
+    <mat-icon>add</mat-icon>
+    Nueva tela
+  </button>
+</div>
+
+<mat-form-field appearance="outline" class="filtro">
+  <mat-label>Buscar por nombre o composición</mat-label>
+  <input matInput [(ngModel)]="filtro" />
+</mat-form-field>
+
+@if (cargando()) {
+  <p>Cargando...</p>
+} @else if (filasFiltradas().length === 0) {
+  <p>No hay telas registradas.</p>
+} @else {
+  <div class="tabla-scroll">
+    <table mat-table [dataSource]="filasFiltradas()">
+      <ng-container matColumnDef="nombre">
+        <th mat-header-cell *matHeaderCellDef>Nombre</th>
+        <td mat-cell *matCellDef="let t">{{ t.nombre }}</td>
+        <td mat-footer-cell *matFooterCellDef>Total</td>
+      </ng-container>
+
+      <ng-container matColumnDef="composicion">
+        <th mat-header-cell *matHeaderCellDef>Composición</th>
+        <td mat-cell *matCellDef="let t">{{ t.composicion }}</td>
+        <td mat-footer-cell *matFooterCellDef></td>
+      </ng-container>
+
+      <ng-container matColumnDef="precio">
+        <th mat-header-cell *matHeaderCellDef class="col-num">Costo/metro</th>
+        <td mat-cell *matCellDef="let t" class="col-num">{{ t.precio_costo | currency: 'MXN' }}</td>
+        <td mat-footer-cell *matFooterCellDef></td>
+      </ng-container>
+
+      <ng-container matColumnDef="rollos">
+        <th mat-header-cell *matHeaderCellDef class="col-num">Rollos disp.</th>
+        <td mat-cell *matCellDef="let t" class="col-num">{{ t.rollosDisponibles }}</td>
+        <td mat-footer-cell *matFooterCellDef class="col-num">{{ totalRollos() }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="metros">
+        <th mat-header-cell *matHeaderCellDef class="col-num">Metros disp.</th>
+        <td mat-cell *matCellDef="let t" class="col-num">{{ t.metrosDisponibles }}</td>
+        <td mat-footer-cell *matFooterCellDef class="col-num">{{ totalMetros() }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="costo">
+        <th mat-header-cell *matHeaderCellDef class="col-num">Costo inventario</th>
+        <td mat-cell *matCellDef="let t" class="col-num">
+          {{ t.metrosDisponibles * t.precio_costo | currency: 'MXN' }}
+        </td>
+        <td mat-footer-cell *matFooterCellDef class="col-num">{{ totalCosto() | currency: 'MXN' }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="acciones">
+        <th mat-header-cell *matHeaderCellDef></th>
+        <td mat-cell *matCellDef="let t">
+          <button mat-icon-button (click)="eliminar(t, $event)" aria-label="Borrar tela">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </td>
+        <td mat-footer-cell *matFooterCellDef></td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="columnas"></tr>
+      <tr mat-row *matRowDef="let row; columns: columnas" class="fila-clic" (click)="abrirDetalle(row)"></tr>
+      <tr mat-footer-row *matFooterRowDef="columnas" class="fila-footer"></tr>
+    </table>
+  </div>
+}

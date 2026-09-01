@@ -1,0 +1,15 @@
+.ayuda {
+  color: var(--mat-sys-on-surface-variant, #555);
+  margin-top: -8px;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  max-width: 420px;
+}
+
+.full-width {
+  width: 100%;
+}

@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "inventario-telas",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["--prefix", "inventario-telas", "run", "start", "--", "--port", "4310"],
+      "port": 4310
+    }
+  ]
+}

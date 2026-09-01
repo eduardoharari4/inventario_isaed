@@ -1,0 +1,60 @@
+<a mat-button routerLink="/telas"><mat-icon>arrow_back</mat-icon> Telas</a>
+
+@if (cargando()) {
+  <p>Cargando...</p>
+} @else if (tela(); as t) {
+  <div class="encabezado">
+    <div>
+      <h2>{{ t.nombre }}</h2>
+      <p class="composicion">{{ t.composicion }}</p>
+      <p class="precio">{{ t.precio_costo | currency: 'MXN' }} costo / metro</p>
+    </div>
+    <div class="resumen">
+      <mat-chip-set>
+        <mat-chip>{{ rollosDisponibles() }} rollos disponibles</mat-chip>
+        <mat-chip>{{ totalMetrosDisponibles() }} m disponibles</mat-chip>
+        <mat-chip>{{ totalMetrosDisponibles() * t.precio_costo | currency: 'MXN' }} en inventario</mat-chip>
+      </mat-chip-set>
+    </div>
+  </div>
+
+  <mat-card class="agregar-rollo">
+    <mat-card-content class="agregar-form">
+      <mat-form-field appearance="outline">
+        <mat-label>Metros del rollo nuevo</mat-label>
+        <input matInput type="number" min="0.01" step="0.01" [(ngModel)]="metrosNuevoRollo" name="metros" />
+      </mat-form-field>
+      <button mat-flat-button color="primary" (click)="agregarRollo()" [disabled]="agregando()">
+        <mat-icon>add</mat-icon>
+        Agregar rollo
+      </button>
+    </mat-card-content>
+  </mat-card>
+
+  <h3>Rollos</h3>
+  @if (rollos().length === 0) {
+    <p>Todavía no hay rollos registrados para esta tela.</p>
+  } @else {
+    <div class="rollos-grid">
+      @for (r of rollos(); track r.id) {
+        <mat-card class="rollo-card" [class.vendido]="r.estado === 'vendido'">
+          <mat-card-content>
+            @if (r.estado === 'disponible') {
+              <button
+                mat-icon-button
+                class="borrar-rollo"
+                (click)="eliminarRollo(r)"
+                aria-label="Borrar rollo"
+              >
+                <mat-icon>close</mat-icon>
+              </button>
+            }
+            <p class="metros">{{ r.metros }} m</p>
+            <p class="estado">{{ r.estado === 'disponible' ? 'Disponible' : 'Vendido' }}</p>
+            <p class="fecha">{{ r.created_at | date: 'dd/MM/yyyy' }}</p>
+          </mat-card-content>
+        </mat-card>
+      }
+    </div>
+  }
+}

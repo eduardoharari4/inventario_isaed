@@ -1,0 +1,34 @@
+<h2>Datos de la empresa</h2>
+<p class="ayuda">Estos datos aparecen en el membrete de cada remisión impresa.</p>
+
+@if (cargando()) {
+  <p>Cargando...</p>
+} @else if (empresa(); as e) {
+  <mat-card>
+    <mat-card-content class="form">
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Nombre de la empresa</mat-label>
+        <input matInput [(ngModel)]="e.nombre" name="nombre" />
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>RFC</mat-label>
+        <input matInput [(ngModel)]="e.rfc" name="rfc" />
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Dirección</mat-label>
+        <input matInput [(ngModel)]="e.direccion" name="direccion" />
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Teléfono</mat-label>
+        <input matInput [(ngModel)]="e.telefono" name="telefono" />
+      </mat-form-field>
+
+      <button mat-flat-button color="primary" (click)="guardar()" [disabled]="guardando()">
+        Guardar
+      </button>
+    </mat-card-content>
+  </mat-card>
+}

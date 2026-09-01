@@ -1,0 +1,72 @@
+.encabezado {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+  margin: 8px 0 16px;
+}
+
+.composicion {
+  margin: 0 0 4px;
+  color: var(--mat-sys-on-surface-variant, #555);
+}
+
+.precio {
+  font-weight: 600;
+  margin: 0;
+}
+
+.agregar-rollo {
+  margin-bottom: 20px;
+}
+
+.agregar-form {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+}
+
+.rollos-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 10px;
+}
+
+.rollo-card {
+  text-align: center;
+  position: relative;
+}
+
+.rollo-card.vendido {
+  opacity: 0.55;
+}
+
+.borrar-rollo {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 28px;
+  height: 28px;
+  line-height: 28px;
+
+  .mat-icon {
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+    line-height: 16px;
+  }
+}
+
+.metros {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin: 0;
+}
+
+.estado,
+.fecha {
+  margin: 2px 0 0;
+  font-size: 0.8rem;
+}

@@ -1,0 +1,83 @@
+<h2>Reporte del negocio</h2>
+
+<div class="periodo-bar">
+  <mat-button-toggle-group [value]="preset()" (change)="aplicarPreset($event.value)">
+    <mat-button-toggle value="hoy">Hoy</mat-button-toggle>
+    <mat-button-toggle value="semana">Esta semana</mat-button-toggle>
+    <mat-button-toggle value="mes">Este mes</mat-button-toggle>
+    <mat-button-toggle value="anio">Este año</mat-button-toggle>
+    <mat-button-toggle value="todo">Todo</mat-button-toggle>
+    <mat-button-toggle value="personalizado">Personalizado</mat-button-toggle>
+  </mat-button-toggle-group>
+
+  @if (preset() === 'personalizado') {
+    <div class="fechas-personalizadas">
+      <mat-form-field appearance="outline" class="filtro-fecha">
+        <mat-label>Desde</mat-label>
+        <input matInput type="date" [(ngModel)]="desde" (change)="cargar()" />
+      </mat-form-field>
+      <mat-form-field appearance="outline" class="filtro-fecha">
+        <mat-label>Hasta</mat-label>
+        <input matInput type="date" [(ngModel)]="hasta" (change)="cargar()" />
+      </mat-form-field>
+    </div>
+  }
+</div>
+
+@if (cargando()) {
+  <p>Cargando...</p>
+} @else if (resumen(); as r) {
+  <div class="grupo">
+    <h3>Ventas del periodo</h3>
+    <div class="tarjetas">
+      <mat-card class="tarjeta">
+        <span class="etiqueta">Total vendido</span>
+        <span class="valor">{{ r.ventasTotal | currency: 'MXN' }}</span>
+      </mat-card>
+      <mat-card class="tarjeta">
+        <span class="etiqueta">Remisiones</span>
+        <span class="valor">{{ r.numRemisiones }}</span>
+      </mat-card>
+      <mat-card class="tarjeta destacada">
+        <span class="etiqueta">Utilidad bruta</span>
+        <span class="valor">{{ r.utilidadBruta | currency: 'MXN' }}</span>
+      </mat-card>
+      <mat-card class="tarjeta">
+        <span class="etiqueta">Margen</span>
+        <span class="valor">{{ r.margenPct | number: '1.0-1' }}%</span>
+      </mat-card>
+      <mat-card class="tarjeta">
+        <span class="etiqueta">Costo de lo vendido</span>
+        <span class="valor">{{ r.costoVendido | currency: 'MXN' }}</span>
+      </mat-card>
+    </div>
+  </div>
+
+  <div class="grupo">
+    <h3>Inventario (al día de hoy)</h3>
+    <div class="tarjetas">
+      <mat-card class="tarjeta">
+        <span class="etiqueta">Metros en inventario</span>
+        <span class="valor">{{ r.metrosInventario | number: '1.0-2' }} m</span>
+      </mat-card>
+      <mat-card class="tarjeta">
+        <span class="etiqueta">Valor de costo del inventario</span>
+        <span class="valor">{{ r.costoInventario | currency: 'MXN' }}</span>
+      </mat-card>
+    </div>
+  </div>
+
+  <div class="grupo">
+    <h3>Cartera (al día de hoy)</h3>
+    <div class="tarjetas">
+      <mat-card class="tarjeta destacada">
+        <span class="etiqueta">Total por cobrar</span>
+        <span class="valor">{{ r.totalPorCobrar | currency: 'MXN' }}</span>
+      </mat-card>
+      <mat-card class="tarjeta">
+        <span class="etiqueta">Clientes con saldo</span>
+        <span class="valor">{{ r.clientesConSaldo }}</span>
+      </mat-card>
+    </div>
+  </div>
+}

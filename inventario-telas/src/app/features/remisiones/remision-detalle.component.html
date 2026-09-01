@@ -1,0 +1,92 @@
+<div class="acciones no-imprimir">
+  <a mat-button routerLink="/remisiones"><mat-icon>arrow_back</mat-icon> Remisiones</a>
+  <div class="acciones-derecha">
+    @if (auth.isAdmin() && remision()?.estado === 'activa') {
+      <button mat-button color="warn" (click)="cancelar()" [disabled]="cancelando()">
+        <mat-icon>cancel</mat-icon> Cancelar remisión
+      </button>
+    }
+    @if (auth.isAdmin()) {
+      <button mat-button color="warn" (click)="eliminar()" [disabled]="eliminando()">
+        <mat-icon>delete_forever</mat-icon> Borrar
+      </button>
+    }
+    <button mat-flat-button color="primary" (click)="imprimir()">
+      <mat-icon>print</mat-icon> Imprimir
+    </button>
+  </div>
+</div>
+
+@if (cargando()) {
+  <p class="no-imprimir">Cargando...</p>
+} @else if (remision(); as r) {
+  <div class="hoja">
+    <header class="membrete">
+      <h1>Nota de Remisión</h1>
+      <div class="folio-fecha">
+        <span>Fecha: {{ r.fecha | date: 'dd/MM/yyyy' }}</span>
+        <span class="folio">No. {{ r.folio }}</span>
+      </div>
+      @if (r.estado === 'cancelada') {
+        <p class="cancelada-aviso">REMISIÓN CANCELADA</p>
+      }
+    </header>
+
+    <section class="datos-cliente">
+      <div class="campo"><span class="etiqueta">Sr(a).:</span><span class="valor">{{ r.cliente.nombre }}</span></div>
+      <div class="campo"><span class="etiqueta">Domicilio:</span><span class="valor">{{ r.cliente.domicilio }}</span></div>
+      <div class="campo"><span class="etiqueta">Ciudad:</span><span class="valor">{{ r.cliente.ciudad }}</span></div>
+      <div class="campo"><span class="etiqueta">Condiciones:</span><span class="valor">{{ r.condiciones }}</span></div>
+    </section>
+
+    <table class="tabla-conceptos">
+      <thead>
+        <tr>
+          <th class="col-cant">Cant. (m)</th>
+          <th>Concepto</th>
+          <th class="col-precio">Precio</th>
+          <th class="col-importe">Importe</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (linea of r.lineas; track linea.tela_id) {
+          <tr>
+            <td class="col-cant">{{ linea.metros }}</td>
+            <td>{{ linea.nombre_tela }}</td>
+            <td class="col-precio">{{ linea.precio_metro | currency: 'MXN' }}</td>
+            <td class="col-importe">{{ linea.importe | currency: 'MXN' }}</td>
+          </tr>
+        }
+        @for (relleno of rellenoFilas(r.lineas.length); track $index) {
+          <tr class="fila-vacia">
+            <td class="col-cant">&nbsp;</td>
+            <td></td>
+            <td class="col-precio"></td>
+            <td class="col-importe"></td>
+          </tr>
+        }
+      </tbody>
+    </table>
+
+    <div class="pie">
+      <footer class="membrete-empresa">
+        @if (empresa(); as e) {
+          <p class="empresa-nombre">{{ e.nombre }}</p>
+          <p>{{ e.direccion }}</p>
+          <p>{{ e.rfc }} · {{ e.telefono }}</p>
+        }
+      </footer>
+
+      <div class="totales">
+        <div><span>Subtotal</span><span>{{ r.subtotal | currency: 'MXN' }}</span></div>
+        <div><span>IVA (16%)</span><span>{{ r.iva | currency: 'MXN' }}</span></div>
+        <div class="total"><span>TOTAL</span><span>{{ r.total | currency: 'MXN' }}</span></div>
+      </div>
+    </div>
+
+    <div class="recibido">
+      <span class="linea-firma"></span>
+      <p>Recibido de conformidad</p>
+    </div>
+  </div>
+}

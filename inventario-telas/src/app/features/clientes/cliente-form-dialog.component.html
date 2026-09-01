@@ -1,0 +1,37 @@
+<h2 mat-dialog-title>{{ data?.cliente ? 'Editar cliente' : 'Nuevo cliente' }}</h2>
+<mat-dialog-content>
+  <form class="form">
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Nombre</mat-label>
+      <input matInput [(ngModel)]="nombre" name="nombre" required />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Domicilio</mat-label>
+      <input matInput [(ngModel)]="domicilio" name="domicilio" />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Ciudad</mat-label>
+      <input matInput [(ngModel)]="ciudad" name="ciudad" />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Teléfono</mat-label>
+      <input matInput [(ngModel)]="telefono" name="telefono" />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Correo</mat-label>
+      <input matInput type="email" [(ngModel)]="email" name="email" />
+    </mat-form-field>
+
+    @if (error()) {
+      <p class="error">{{ error() }}</p>
+    }
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close [disabled]="guardando()">Cancelar</button>
+  <button mat-flat-button color="primary" (click)="guardar()" [disabled]="guardando()">Guardar</button>
+</mat-dialog-actions>

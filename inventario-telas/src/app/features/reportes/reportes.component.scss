@@ -1,0 +1,53 @@
+.periodo-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.fechas-personalizadas {
+  display: flex;
+  gap: 8px;
+}
+
+.filtro-fecha {
+  width: 160px;
+}
+
+.grupo {
+  margin-bottom: 24px;
+}
+
+.tarjetas {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+  gap: 12px;
+}
+
+.tarjeta {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 14px 16px;
+}
+
+.tarjeta .etiqueta {
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: #5b6272;
+}
+
+.tarjeta .valor {
+  font-size: 1.3rem;
+  font-weight: 700;
+}
+
+.tarjeta.destacada {
+  border-color: var(--brand-primary);
+
+  .valor {
+    color: var(--brand-primary);
+  }
+}

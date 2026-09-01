@@ -1,0 +1,73 @@
+<h2>Usuarios</h2>
+<p class="ayuda">
+  Registro cerrado: solo alguien invitado aquí con su correo puede crear una cuenta.
+</p>
+
+<mat-card class="invitar-card">
+  <mat-card-header>
+    <mat-card-title>Invitar a alguien</mat-card-title>
+  </mat-card-header>
+  <mat-card-content class="invitar-form">
+    <mat-form-field appearance="outline">
+      <mat-label>Correo</mat-label>
+      <input matInput type="email" [(ngModel)]="emailNuevo" name="emailNuevo" />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Rol</mat-label>
+      <mat-select [(ngModel)]="rolNuevo" name="rolNuevo">
+        <mat-option value="vendedor">Vendedor</mat-option>
+        <mat-option value="admin">Admin</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <button mat-flat-button color="primary" (click)="invitar()" [disabled]="invitando()">
+      <mat-icon>person_add</mat-icon>
+      Invitar
+    </button>
+  </mat-card-content>
+</mat-card>
+
+@if (cargando()) {
+  <p>Cargando...</p>
+} @else {
+  @if (invitaciones().length > 0) {
+    <h3>Invitaciones pendientes</h3>
+    <div class="lista">
+      @for (inv of invitaciones(); track inv.email) {
+        <mat-card class="fila">
+          <div>
+            <strong>{{ inv.email }}</strong>
+            <span class="rol-tag">{{ inv.rol === 'admin' ? 'Admin' : 'Vendedor' }}</span>
+            <p class="fecha">Invitado el {{ inv.created_at | date: 'dd/MM/yyyy' }} — aún no se registra</p>
+          </div>
+          <button mat-icon-button (click)="cancelarInvitacion(inv.email)" aria-label="Cancelar invitación">
+            <mat-icon>close</mat-icon>
+          </button>
+        </mat-card>
+      }
+    </div>
+  }
+
+  <h3>Usuarios activos</h3>
+  <div class="lista">
+    @for (perfil of perfiles(); track perfil.id) {
+      <mat-card class="fila">
+        <div>
+          <strong>{{ perfil.nombre }}</strong>
+        </div>
+        <mat-form-field appearance="outline" class="rol-select">
+          <mat-label>Rol</mat-label>
+          <mat-select
+            [ngModel]="perfil.rol"
+            (ngModelChange)="cambiarRol(perfil, $event)"
+            [disabled]="perfil.id === auth.profile()?.id"
+          >
+            <mat-option value="vendedor">Vendedor</mat-option>
+            <mat-option value="admin">Admin</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </mat-card>
+    }
+  </div>
+}

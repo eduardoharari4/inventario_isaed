@@ -1,0 +1,42 @@
+.header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+
+.filtros {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.filtro-texto {
+  flex: 1 1 220px;
+  min-width: 180px;
+}
+
+.filtro-estado {
+  width: 150px;
+}
+
+.filtro-fecha {
+  width: 150px;
+}
+
+.tabla-scroll {
+  overflow-x: auto;
+
+  table {
+    width: 100%;
+  }
+}
+
+mat-chip.cancelada {
+  text-decoration: line-through;
+  opacity: 0.7;
+}

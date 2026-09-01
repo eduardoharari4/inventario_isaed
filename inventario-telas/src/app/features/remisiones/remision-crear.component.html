@@ -1,0 +1,90 @@
+<a mat-button routerLink="/remisiones"><mat-icon>arrow_back</mat-icon> Remisiones</a>
+
+<h2>Nueva remisión</h2>
+
+@if (cargando()) {
+  <p>Cargando...</p>
+} @else {
+  <mat-card class="datos-card">
+    <mat-card-content class="datos-form">
+      <mat-form-field appearance="outline">
+        <mat-label>Cliente</mat-label>
+        <mat-select [(ngModel)]="clienteId">
+          @for (c of clientes(); track c.id) {
+            <mat-option [value]="c.id">{{ c.nombre }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Condiciones (opcional)</mat-label>
+        <input matInput [(ngModel)]="condiciones" placeholder="ej. Contado" />
+      </mat-form-field>
+    </mat-card-content>
+  </mat-card>
+
+  <h3>Selecciona los rollos vendidos</h3>
+
+  @if (grupos().length === 0) {
+    <p>No hay rollos disponibles en inventario.</p>
+  } @else {
+    @for (grupo of grupos(); track grupo.tela.id) {
+      <mat-card class="grupo-card">
+        <mat-card-header>
+          <mat-card-title>{{ grupo.tela.nombre }}</mat-card-title>
+          <mat-card-subtitle>Costo: {{ grupo.tela.precio_costo | currency: 'MXN' }} / metro</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="rollos-chips">
+            @for (r of grupo.rollos; track r.id) {
+              <label class="rollo-check">
+                <mat-checkbox
+                  [checked]="seleccionados().has(r.id)"
+                  (change)="toggleRollo(r.id)"
+                >
+                  {{ r.metros }} m
+                </mat-checkbox>
+              </label>
+            }
+          </div>
+
+          @if (metrosSeleccionadosDeTela(grupo) > 0) {
+            <mat-form-field appearance="outline" class="precio-venta">
+              <mat-label>Precio de venta por metro</mat-label>
+              <input
+                matInput
+                type="number"
+                min="0"
+                step="0.01"
+                [ngModel]="precioVentaDe(grupo.tela.id)"
+                (ngModelChange)="setPrecioVenta(grupo.tela.id, $event)"
+              />
+              <span matTextPrefix>$&nbsp;</span>
+            </mat-form-field>
+            <p class="subtotal-tela">
+              {{ metrosSeleccionadosDeTela(grupo) }} m seleccionados —
+              {{ importeSeleccionadoDeTela(grupo) | currency: 'MXN' }}
+            </p>
+          }
+        </mat-card-content>
+      </mat-card>
+    }
+  }
+
+  <mat-card class="totales-card">
+    <mat-card-content>
+      <div class="linea-total"><span>Subtotal</span><span>{{ subtotal() | currency: 'MXN' }}</span></div>
+      <div class="linea-total"><span>IVA (16%)</span><span>{{ iva() | currency: 'MXN' }}</span></div>
+      <div class="linea-total total"><span>Total</span><span>{{ total() | currency: 'MXN' }}</span></div>
+      <button
+        mat-flat-button
+        color="primary"
+        class="full-width"
+        (click)="confirmar()"
+        [disabled]="guardando() || !hayRollosSeleccionados() || faltaPrecioVenta()"
+      >
+        Crear remisión
+      </button>
+    </mat-card-content>
+  </mat-card>
+}

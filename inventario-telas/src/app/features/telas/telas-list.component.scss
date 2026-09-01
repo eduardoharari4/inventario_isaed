@@ -1,0 +1,29 @@
+.header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+
+.filtro {
+  width: 100%;
+  max-width: 400px;
+}
+
+.tabla-scroll {
+  overflow-x: auto;
+
+  table {
+    width: 100%;
+  }
+}
+
+.col-num {
+  text-align: right;
+}
+
+.fila-clic {
+  cursor: pointer;
+}

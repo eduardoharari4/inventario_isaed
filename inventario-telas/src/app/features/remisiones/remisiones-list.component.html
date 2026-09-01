@@ -1,0 +1,102 @@
+<div class="header-row">
+  <h2>Remisiones</h2>
+  <button mat-flat-button color="primary" routerLink="/remisiones/nueva">
+    <mat-icon>add</mat-icon>
+    Nueva remisión
+  </button>
+</div>
+
+<div class="filtros">
+  <mat-form-field appearance="outline" class="filtro-texto">
+    <mat-label>Buscar por folio o cliente</mat-label>
+    <input matInput [(ngModel)]="filtro" />
+  </mat-form-field>
+
+  <mat-form-field appearance="outline" class="filtro-estado">
+    <mat-label>Estado</mat-label>
+    <mat-select [(ngModel)]="filtroEstado">
+      <mat-option value="todas">Todas</mat-option>
+      <mat-option value="activa">Activas</mat-option>
+      <mat-option value="cancelada">Canceladas</mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline" class="filtro-fecha">
+    <mat-label>Desde</mat-label>
+    <input matInput type="date" [(ngModel)]="desde" />
+  </mat-form-field>
+
+  <mat-form-field appearance="outline" class="filtro-fecha">
+    <mat-label>Hasta</mat-label>
+    <input matInput type="date" [(ngModel)]="hasta" />
+  </mat-form-field>
+
+  <button mat-button (click)="limpiarFiltros()">
+    <mat-icon>filter_alt_off</mat-icon>
+    Limpiar
+  </button>
+</div>
+
+@if (cargando()) {
+  <p>Cargando...</p>
+} @else if (remisiones().length === 0) {
+  <p>Todavía no hay remisiones.</p>
+} @else if (remisionesFiltradas().length === 0) {
+  <p>Ninguna remisión coincide con el filtro.</p>
+} @else {
+  <div class="tabla-scroll">
+    <table mat-table [dataSource]="remisionesFiltradas()">
+      <ng-container matColumnDef="folio">
+        <th mat-header-cell *matHeaderCellDef>Folio</th>
+        <td mat-cell *matCellDef="let r">
+          <a [routerLink]="['/remisiones', r.id]">#{{ r.folio }}</a>
+        </td>
+        <td mat-footer-cell *matFooterCellDef>Total mostrado</td>
+      </ng-container>
+
+      <ng-container matColumnDef="fecha">
+        <th mat-header-cell *matHeaderCellDef>Fecha</th>
+        <td mat-cell *matCellDef="let r">{{ r.fecha | date: 'dd/MM/yyyy' }}</td>
+        <td mat-footer-cell *matFooterCellDef></td>
+      </ng-container>
+
+      <ng-container matColumnDef="cliente">
+        <th mat-header-cell *matHeaderCellDef>Cliente</th>
+        <td mat-cell *matCellDef="let r">{{ r.cliente.nombre }}</td>
+        <td mat-footer-cell *matFooterCellDef>{{ remisionesFiltradas().length }} remisión(es)</td>
+      </ng-container>
+
+      <ng-container matColumnDef="total">
+        <th mat-header-cell *matHeaderCellDef>Total</th>
+        <td mat-cell *matCellDef="let r">{{ r.total | currency: 'MXN' }}</td>
+        <td mat-footer-cell *matFooterCellDef>{{ totalMostrado() | currency: 'MXN' }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="estado">
+        <th mat-header-cell *matHeaderCellDef></th>
+        <td mat-cell *matCellDef="let r">
+          <mat-chip [class.cancelada]="r.estado === 'cancelada'">
+            {{ r.estado === 'activa' ? 'Activa' : 'Cancelada' }}
+          </mat-chip>
+        </td>
+        <td mat-footer-cell *matFooterCellDef></td>
+      </ng-container>
+
+      <ng-container matColumnDef="acciones">
+        <th mat-header-cell *matHeaderCellDef></th>
+        <td mat-cell *matCellDef="let r">
+          @if (auth.isAdmin()) {
+            <button mat-icon-button (click)="eliminar(r, $event)" aria-label="Borrar remisión">
+              <mat-icon>delete</mat-icon>
+            </button>
+          }
+        </td>
+        <td mat-footer-cell *matFooterCellDef></td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="columnas"></tr>
+      <tr mat-row *matRowDef="let row; columns: columnas"></tr>
+      <tr mat-footer-row *matFooterRowDef="columnas"></tr>
+    </table>
+  </div>
+}

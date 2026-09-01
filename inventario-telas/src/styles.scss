@@ -1,0 +1,144 @@
+// Include theming for Angular Material with `mat.theme()`.
+// This Sass mixin will define CSS variables that are used for styling Angular Material
+// components according to the Material 3 design spec.
+// Learn more about theming and how to use it for your application's
+// custom components at https://material.angular.dev/guide/theming
+@use '@angular/material' as mat;
+
+html {
+  @include mat.theme((
+    color: (
+      primary: mat.$blue-palette,
+      tertiary: mat.$orange-palette,
+    ),
+    typography: Inter,
+    density: 0,
+  ));
+}
+
+:root {
+  // Colores de marca explícitos (no todos los componentes de Material 3
+  // heredan color de marca automáticamente, ej. mat-toolbar).
+  --brand-primary: #2c4a8c;
+  --brand-primary-dark: #1c3563;
+  --brand-accent: #ff8a3d;
+  --brand-bg: #f7f8fa;
+  --brand-surface: #ffffff;
+  --brand-border: rgba(15, 23, 42, 0.09);
+  --brand-shadow: 0 1px 2px rgba(15, 23, 42, 0.05);
+  --brand-radius: 8px;
+}
+
+body {
+  // Default the application to a light color theme. This can be changed to
+  // `dark` to enable the dark color theme, or to `light dark` to defer to the
+  // user's system settings.
+  color-scheme: light;
+
+  background-color: var(--brand-bg);
+  color: var(--mat-sys-on-surface);
+  font: var(--mat-sys-body-medium);
+
+  // Reset the user agent margin.
+  margin: 0;
+}
+
+html, body { height: 100%; }
+body { margin: 0; font-family: 'Inter', Roboto, "Helvetica Neue", sans-serif; }
+
+h1, h2, h3, h4 {
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  margin: 0 0 4px;
+  color: #1a1d29;
+}
+
+h1 { font-size: 1.3rem; }
+h2 { font-size: 1.15rem; }
+h3 { font-size: 1rem; }
+h4 { font-size: 0.9rem; }
+
+p {
+  font-size: 0.875rem;
+}
+
+// ---------------------------------------------------------------------
+// Tarjetas: fondo blanco definido, borde fino, sombra casi imperceptible
+// (look "flat" de panel de datos, no de app de consumo).
+// ---------------------------------------------------------------------
+.mat-mdc-card {
+  background-color: var(--brand-surface) !important;
+  border: 1px solid var(--brand-border);
+  box-shadow: var(--brand-shadow) !important;
+  border-radius: var(--brand-radius) !important;
+}
+
+// ---------------------------------------------------------------------
+// Botones: Material 3 los hace "pastilla" (radio completo) por defecto,
+// lo cual lee más a app de consumo/móvil. Para un panel de negocio se ve
+// más profesional con esquinas ligeramente redondeadas, no una pastilla.
+// ---------------------------------------------------------------------
+.mat-mdc-button-base:not(.mat-mdc-icon-button):not(.mat-mdc-fab):not(.mat-mdc-mini-fab) {
+  border-radius: var(--brand-radius) !important;
+  font-weight: 500;
+  letter-spacing: 0;
+}
+
+// ---------------------------------------------------------------------
+// Tablas: encabezado con fondo tenue y texto semibold, filas con
+// separador fino y hover sutil — estética de panel de datos.
+// ---------------------------------------------------------------------
+.mat-mdc-table {
+  background: transparent;
+}
+
+.mat-mdc-header-row {
+  background: #f2f3f7;
+}
+
+.mat-mdc-header-cell {
+  font-weight: 600;
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: #5b6272;
+  border-bottom: 1px solid var(--brand-border);
+}
+
+.mat-mdc-cell {
+  font-size: 0.9rem;
+  border-bottom: 1px solid var(--brand-border);
+  color: #1f2430;
+}
+
+.mat-mdc-row:hover .mat-mdc-cell {
+  background: #f5f7fb;
+}
+
+.mat-mdc-row,
+.mat-mdc-header-row {
+  height: 44px;
+}
+
+// Fila de totales al pie de una tabla.
+.mat-mdc-footer-row {
+  height: 40px;
+  background: #f2f3f7;
+}
+
+.mat-mdc-footer-cell {
+  font-weight: 700;
+  font-size: 0.88rem;
+  border-top: 2px solid var(--brand-border);
+  color: #1a1d29;
+}
+
+// Contenedor blanco alrededor de cualquier tabla suelta (sin envolverla
+// manualmente en cada página) para que combine con el resto de tarjetas.
+.tabla-scroll {
+  background: var(--brand-surface);
+  border: 1px solid var(--brand-border);
+  border-radius: var(--brand-radius);
+  overflow: hidden;
+  overflow-x: auto;
+}
