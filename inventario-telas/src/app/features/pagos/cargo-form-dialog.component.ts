@@ -4,26 +4,25 @@ import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/materia
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
-import { PagosService } from './pagos.service';
+import { CargosManualesService } from './cargos-manuales.service';
 import { mensajeError } from '../../shared/utils/errors';
 
 @Component({
-  selector: 'app-pago-form-dialog',
+  selector: 'app-cargo-form-dialog',
   standalone: true,
   imports: [FormsModule, MatDialogModule, MatFormFieldModule, MatInputModule, MatButtonModule],
-  templateUrl: './pago-form-dialog.component.html',
-  styleUrl: './pago-form-dialog.component.scss'
+  templateUrl: './cargo-form-dialog.component.html',
+  styleUrl: './cargo-form-dialog.component.scss'
 })
-export class PagoFormDialogComponent {
+export class CargoFormDialogComponent {
   monto: number | null = null;
-  formaPago = '';
-  nota = '';
+  concepto = '';
   guardando = signal(false);
   error = signal('');
 
   constructor(
-    private pagosService: PagosService,
-    private ref: MatDialogRef<PagoFormDialogComponent>,
+    private cargosService: CargosManualesService,
+    private ref: MatDialogRef<CargoFormDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: { clienteId: number; clienteNombre: string }
   ) {}
 
@@ -35,11 +34,10 @@ export class PagoFormDialogComponent {
     this.guardando.set(true);
     this.error.set('');
     try {
-      await this.pagosService.registrar({
+      await this.cargosService.registrar({
         cliente_id: this.data.clienteId,
         monto: this.monto,
-        forma_pago: this.formaPago.trim(),
-        nota: this.nota.trim()
+        concepto: this.concepto.trim()
       });
       this.ref.close(true);
     } catch (e: unknown) {

@@ -1,0 +1,27 @@
+<h2 mat-dialog-title>Registrar deuda — {{ data.clienteNombre }}</h2>
+<mat-dialog-content>
+  <p class="ayuda">
+    Para deudas que no vienen de una nota de remisión (ej. saldo previo a usar el sistema, o un
+    ajuste). Se suma al saldo del cliente igual que una remisión.
+  </p>
+  <form class="form">
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Monto</mat-label>
+      <input matInput type="number" min="0.01" step="0.01" [(ngModel)]="monto" name="monto" required />
+      <span matTextPrefix>$&nbsp;</span>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Concepto (opcional)</mat-label>
+      <input matInput [(ngModel)]="concepto" name="concepto" placeholder="ej. Saldo previo" />
+    </mat-form-field>
+
+    @if (error()) {
+      <p class="error">{{ error() }}</p>
+    }
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close [disabled]="guardando()">Cancelar</button>
+  <button mat-flat-button color="primary" (click)="guardar()" [disabled]="guardando()">Guardar</button>
+</mat-dialog-actions>

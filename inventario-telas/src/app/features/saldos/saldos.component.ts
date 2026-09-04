@@ -12,8 +12,10 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { SaldosService } from './saldos.service';
 import { PagosService } from '../pagos/pagos.service';
-import { SaldoCliente, Pago } from '../../shared/models/models';
+import { CargosManualesService } from '../pagos/cargos-manuales.service';
+import { SaldoCliente, Pago, CargoManual } from '../../shared/models/models';
 import { PagoFormDialogComponent } from '../pagos/pago-form-dialog.component';
+import { CargoFormDialogComponent } from '../pagos/cargo-form-dialog.component';
 
 @Component({
   selector: 'app-saldos',
@@ -40,10 +42,12 @@ export class SaldosComponent {
   soloConSaldo = signal(false);
   cargando = signal(true);
   pagosPorCliente = signal<Map<number, Pago[]>>(new Map());
+  cargosPorCliente = signal<Map<number, CargoManual[]>>(new Map());
 
   constructor(
     private saldosService: SaldosService,
     private pagosService: PagosService,
+    private cargosService: CargosManualesService,
     private dialog: MatDialog,
     private snackBar: MatSnackBar
   ) {
@@ -86,15 +90,36 @@ export class SaldosComponent {
   }
 
   async verHistorial(clienteId: number) {
-    if (this.pagosPorCliente().has(clienteId)) return;
-    const pagos = await this.pagosService.listarPorCliente(clienteId);
-    const mapa = new Map(this.pagosPorCliente());
-    mapa.set(clienteId, pagos);
-    this.pagosPorCliente.set(mapa);
+    if (!this.pagosPorCliente().has(clienteId)) {
+      const pagos = await this.pagosService.listarPorCliente(clienteId);
+      const mapa = new Map(this.pagosPorCliente());
+      mapa.set(clienteId, pagos);
+      this.pagosPorCliente.set(mapa);
+    }
+    if (!this.cargosPorCliente().has(clienteId)) {
+      const cargos = await this.cargosService.listarPorCliente(clienteId);
+      const mapa = new Map(this.cargosPorCliente());
+      mapa.set(clienteId, cargos);
+      this.cargosPorCliente.set(mapa);
+    }
   }
 
   historialDe(clienteId: number): Pago[] {
     return this.pagosPorCliente().get(clienteId) ?? [];
+  }
+
+  cargosDe(clienteId: number): CargoManual[] {
+    return this.cargosPorCliente().get(clienteId) ?? [];
+  }
+
+  private invalidarCache(clienteId: number) {
+    const pagos = new Map(this.pagosPorCliente());
+    pagos.delete(clienteId);
+    this.pagosPorCliente.set(pagos);
+
+    const cargos = new Map(this.cargosPorCliente());
+    cargos.delete(clienteId);
+    this.cargosPorCliente.set(cargos);
   }
 
   registrarPago(saldo: SaldoCliente) {
@@ -104,10 +129,23 @@ export class SaldosComponent {
     });
     ref.afterClosed().subscribe(async (ok) => {
       if (ok) {
-        const mapa = new Map(this.pagosPorCliente());
-        mapa.delete(saldo.cliente_id);
-        this.pagosPorCliente.set(mapa);
+        this.invalidarCache(saldo.cliente_id);
         await this.cargar();
+        await this.verHistorial(saldo.cliente_id);
+      }
+    });
+  }
+
+  registrarCargo(saldo: SaldoCliente) {
+    const ref = this.dialog.open(CargoFormDialogComponent, {
+      width: '400px',
+      data: { clienteId: saldo.cliente_id, clienteNombre: saldo.nombre }
+    });
+    ref.afterClosed().subscribe(async (ok) => {
+      if (ok) {
+        this.invalidarCache(saldo.cliente_id);
+        await this.cargar();
+        await this.verHistorial(saldo.cliente_id);
       }
     });
   }
@@ -118,13 +156,25 @@ export class SaldosComponent {
     }
     try {
       await this.pagosService.eliminar(pago.id);
-      const mapa = new Map(this.pagosPorCliente());
-      mapa.delete(pago.cliente_id);
-      this.pagosPorCliente.set(mapa);
+      this.invalidarCache(pago.cliente_id);
       await this.cargar();
       await this.verHistorial(pago.cliente_id);
     } catch {
       this.snackBar.open('No se pudo borrar el pago', 'Cerrar', { duration: 4000 });
+    }
+  }
+
+  async eliminarCargo(cargo: CargoManual) {
+    if (!confirm('¿Borrar este cargo? El saldo del cliente bajará. No se puede deshacer.')) {
+      return;
+    }
+    try {
+      await this.cargosService.eliminar(cargo.id);
+      this.invalidarCache(cargo.cliente_id);
+      await this.cargar();
+      await this.verHistorial(cargo.cliente_id);
+    } catch {
+      this.snackBar.open('No se pudo borrar el cargo', 'Cerrar', { duration: 4000 });
     }
   }
 }

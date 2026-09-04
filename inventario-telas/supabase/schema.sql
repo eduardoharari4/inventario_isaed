@@ -187,6 +187,22 @@ create table public.pagos (
 
 create index pagos_cliente_id_idx on public.pagos (cliente_id);
 
+-- ---------------------------------------------------------------------
+-- Tabla: cargos_manuales (deuda de un cliente sin nota de remisión, ej.
+-- saldo previo a usar el sistema, o un ajuste manual)
+-- ---------------------------------------------------------------------
+create table public.cargos_manuales (
+  id bigint generated always as identity primary key,
+  cliente_id bigint not null references public.clientes (id) on delete cascade,
+  monto numeric(10, 2) not null check (monto > 0),
+  concepto text not null default '',
+  fecha date not null default current_date,
+  usuario_id uuid not null references public.profiles (id),
+  created_at timestamptz not null default now()
+);
+
+create index cargos_manuales_cliente_id_idx on public.cargos_manuales (cliente_id);
+
 -- =====================================================================
 -- Row Level Security
 -- =====================================================================
@@ -199,6 +215,7 @@ alter table public.clientes enable row level security;
 alter table public.remisiones enable row level security;
 alter table public.remision_rollos enable row level security;
 alter table public.pagos enable row level security;
+alter table public.cargos_manuales enable row level security;
 
 -- profiles: cada quien ve su propio perfil; admin ve todos y puede
 -- cambiar el rol de cualquiera (ej. promover a alguien a admin).
@@ -222,13 +239,23 @@ create policy empresa_select on public.empresa
 create policy empresa_update on public.empresa
   for update to authenticated using (public.es_admin());
 
--- telas / rollos / clientes: CRUD para cualquier usuario autenticado.
-create policy telas_all on public.telas
-  for all to authenticated using (true) with check (true);
-create policy rollos_all on public.rollos
-  for all to authenticated using (true) with check (true);
-create policy clientes_all on public.clientes
-  for all to authenticated using (true) with check (true);
+-- telas / rollos / clientes: cualquier autenticado puede LEER (lo
+-- necesita el flujo de crear remisión), pero solo admin puede crear,
+-- editar o borrar — un vendedor solo hace remisiones, nada más.
+create policy telas_select on public.telas
+  for select to authenticated using (true);
+create policy telas_admin_write on public.telas
+  for all to authenticated using (public.es_admin()) with check (public.es_admin());
+
+create policy rollos_select on public.rollos
+  for select to authenticated using (true);
+create policy rollos_admin_write on public.rollos
+  for all to authenticated using (public.es_admin()) with check (public.es_admin());
+
+create policy clientes_select on public.clientes
+  for select to authenticated using (true);
+create policy clientes_admin_write on public.clientes
+  for all to authenticated using (public.es_admin()) with check (public.es_admin());
 
 -- remisiones / remision_rollos: cualquier autenticado lee y crea;
 -- solo admin puede cambiar el estado (cancelar).
@@ -250,6 +277,14 @@ create policy pagos_select on public.pagos
 create policy pagos_insert on public.pagos
   for insert to authenticated with check (public.es_admin());
 create policy pagos_delete on public.pagos
+  for delete to authenticated using (public.es_admin());
+
+-- cargos_manuales: solo admin (igual que pagos).
+create policy cargos_manuales_select on public.cargos_manuales
+  for select to authenticated using (public.es_admin());
+create policy cargos_manuales_insert on public.cargos_manuales
+  for insert to authenticated with check (public.es_admin());
+create policy cargos_manuales_delete on public.cargos_manuales
   for delete to authenticated using (public.es_admin());
 
 -- Saldos por cliente: como `clientes` y `remisiones` son legibles por
@@ -278,9 +313,9 @@ begin
   select
     c.id,
     c.nombre,
-    coalesce(r.total_cargos, 0),
+    coalesce(r.total_cargos, 0) + coalesce(m.total_manual, 0),
     coalesce(p.total_pagos, 0),
-    coalesce(r.total_cargos, 0) - coalesce(p.total_pagos, 0)
+    coalesce(r.total_cargos, 0) + coalesce(m.total_manual, 0) - coalesce(p.total_pagos, 0)
   from public.clientes c
   left join (
     select rem.cliente_id, sum(rem.total) as total_cargos
@@ -289,10 +324,16 @@ begin
     group by rem.cliente_id
   ) r on r.cliente_id = c.id
   left join (
+    select cm.cliente_id, sum(cm.monto) as total_manual
+    from public.cargos_manuales cm
+    group by cm.cliente_id
+  ) m on m.cliente_id = c.id
+  left join (
     select pag.cliente_id, sum(pag.monto) as total_pagos
     from public.pagos pag
     group by pag.cliente_id
-  ) p on p.cliente_id = c.id;
+  ) p on p.cliente_id = c.id
+  order by c.nombre;
 end;
 $$;
 

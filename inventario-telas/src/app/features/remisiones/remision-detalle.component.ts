@@ -59,7 +59,7 @@ export class RemisionDetalleComponent {
   }
 
   rellenoFilas(cantidadLineas: number): number[] {
-    const faltantes = Math.max(0, 4 - cantidadLineas);
+    const faltantes = Math.max(0, 12 - cantidadLineas);
     return Array.from({ length: faltantes });
   }
 

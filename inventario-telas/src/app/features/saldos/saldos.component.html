@@ -42,9 +42,32 @@
         </mat-expansion-panel-header>
 
         <div class="detalle-saldo">
-          <p>Cargos por remisiones: {{ s.total_cargos | currency: 'MXN' }}</p>
+          <p>Cargos totales (remisiones + deudas manuales): {{ s.total_cargos | currency: 'MXN' }}</p>
           <p>Pagos recibidos: {{ s.total_pagos | currency: 'MXN' }}</p>
         </div>
+
+        <h4>Deudas manuales (sin remisión)</h4>
+        @if (cargosDe(s.cliente_id).length === 0) {
+          <p class="sin-pagos">Sin deudas manuales registradas.</p>
+        } @else {
+          <ul class="lista-pagos">
+            @for (c of cargosDe(s.cliente_id); track c.id) {
+              <li>
+                <span>
+                  {{ c.fecha | date: 'dd/MM/yyyy' }} — {{ c.monto | currency: 'MXN' }}
+                  @if (c.concepto) { ({{ c.concepto }}) }
+                </span>
+                <button mat-icon-button (click)="eliminarCargo(c)" aria-label="Borrar cargo">
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </li>
+            }
+          </ul>
+        }
+        <button mat-button (click)="registrarCargo(s)">
+          <mat-icon>add</mat-icon>
+          Registrar deuda sin remisión
+        </button>
 
         <h4>Historial de pagos</h4>
         @if (historialDe(s.cliente_id).length === 0) {

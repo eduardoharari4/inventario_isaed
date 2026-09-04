@@ -1,0 +1,21 @@
+.ayuda {
+  font-size: 0.85rem;
+  color: var(--mat-sys-on-surface-variant, #555);
+  margin-top: -4px;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 280px;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.error {
+  color: var(--mat-sys-error, #b3261e);
+  font-size: 0.875rem;
+}

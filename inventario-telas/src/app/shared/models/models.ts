@@ -87,6 +87,17 @@ export interface Pago {
   created_at: string;
 }
 
+/** Deuda de un cliente sin nota de remisión (saldo previo, ajuste manual). */
+export interface CargoManual {
+  id: number;
+  cliente_id: number;
+  monto: number;
+  concepto: string;
+  fecha: string;
+  usuario_id: string;
+  created_at: string;
+}
+
 export interface SaldoCliente {
   cliente_id: number;
   nombre: string;

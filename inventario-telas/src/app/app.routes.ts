@@ -15,16 +15,19 @@ export const routes: Routes = [
       { path: '', pathMatch: 'full', redirectTo: 'remisiones' },
       {
         path: 'telas',
+        canActivate: [adminGuard],
         loadComponent: () =>
           import('./features/telas/telas-list.component').then((m) => m.TelasListComponent)
       },
       {
         path: 'telas/:id',
+        canActivate: [adminGuard],
         loadComponent: () =>
           import('./features/telas/tela-detalle.component').then((m) => m.TelaDetalleComponent)
       },
       {
         path: 'clientes',
+        canActivate: [adminGuard],
         loadComponent: () =>
           import('./features/clientes/clientes-list.component').then(
             (m) => m.ClientesListComponent
