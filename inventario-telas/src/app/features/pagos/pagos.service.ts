@@ -16,7 +16,9 @@ export class PagosService {
     return data as Pago[];
   }
 
-  async registrar(pago: Pick<Pago, 'cliente_id' | 'monto' | 'forma_pago' | 'nota'>): Promise<void> {
+  async registrar(
+    pago: Pick<Pago, 'cliente_id' | 'monto' | 'forma_pago' | 'nota' | 'fecha'>
+  ): Promise<void> {
     const { data: userData } = await this.supabase.client.auth.getUser();
     const { error } = await this.supabase.client
       .from('pagos')

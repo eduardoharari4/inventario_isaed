@@ -7,7 +7,7 @@
 </div>
 
 <mat-form-field appearance="outline" class="filtro">
-  <mat-label>Buscar por nombre o composición</mat-label>
+  <mat-label>Buscar por nombre, composición o color</mat-label>
   <input matInput [(ngModel)]="filtro" />
 </mat-form-field>
 
@@ -27,6 +27,12 @@
       <ng-container matColumnDef="composicion">
         <th mat-header-cell *matHeaderCellDef>Composición</th>
         <td mat-cell *matCellDef="let t">{{ t.composicion }}</td>
+        <td mat-footer-cell *matFooterCellDef></td>
+      </ng-container>
+
+      <ng-container matColumnDef="color">
+        <th mat-header-cell *matHeaderCellDef>Color</th>
+        <td mat-cell *matCellDef="let t">{{ t.color }}</td>
         <td mat-footer-cell *matFooterCellDef></td>
       </ng-container>
 

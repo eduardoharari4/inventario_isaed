@@ -16,6 +16,7 @@ import { TelasService } from './telas.service';
 export class TelaFormDialogComponent {
   nombre = '';
   composicion = '';
+  color = '';
   precioCosto: number | null = null;
   guardando = signal(false);
   error = signal('');
@@ -33,6 +34,7 @@ export class TelaFormDialogComponent {
       await this.telasService.crear({
         nombre: this.nombre.trim(),
         composicion: this.composicion.trim(),
+        color: this.color.trim(),
         precio_costo: this.precioCosto
       });
       this.ref.close(true);

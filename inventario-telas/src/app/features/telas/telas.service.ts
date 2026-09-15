@@ -25,7 +25,7 @@ export class TelasService {
     return data as Tela;
   }
 
-  async crear(tela: Pick<Tela, 'nombre' | 'composicion' | 'precio_costo'>): Promise<Tela> {
+  async crear(tela: Pick<Tela, 'nombre' | 'composicion' | 'color' | 'precio_costo'>): Promise<Tela> {
     const { data, error } = await this.supabase.client
       .from('telas')
       .insert(tela)

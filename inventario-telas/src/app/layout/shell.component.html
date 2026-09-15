@@ -10,11 +10,11 @@
         <mat-icon matListItemIcon>receipt_long</mat-icon>
         <span matListItemTitle>Remisiones</span>
       </a>
+      <a mat-list-item routerLink="/telas" routerLinkActive="active-link" (click)="closeIfHandset(drawer)">
+        <mat-icon matListItemIcon>checkroom</mat-icon>
+        <span matListItemTitle>Telas e inventario</span>
+      </a>
       @if (auth.isAdmin()) {
-        <a mat-list-item routerLink="/telas" routerLinkActive="active-link" (click)="closeIfHandset(drawer)">
-          <mat-icon matListItemIcon>checkroom</mat-icon>
-          <span matListItemTitle>Telas e inventario</span>
-        </a>
         <a mat-list-item routerLink="/clientes" routerLinkActive="active-link" (click)="closeIfHandset(drawer)">
           <mat-icon matListItemIcon>groups</mat-icon>
           <span matListItemTitle>Clientes</span>

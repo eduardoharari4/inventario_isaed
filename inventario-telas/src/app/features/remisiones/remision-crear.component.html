@@ -17,6 +17,11 @@
       </mat-form-field>
 
       <mat-form-field appearance="outline">
+        <mat-label>Fecha</mat-label>
+        <input matInput type="date" [(ngModel)]="fecha" />
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
         <mat-label>Condiciones (opcional)</mat-label>
         <input matInput [(ngModel)]="condiciones" placeholder="ej. Contado" />
       </mat-form-field>
@@ -31,7 +36,7 @@
     @for (grupo of grupos(); track grupo.tela.id) {
       <mat-card class="grupo-card">
         <mat-card-header>
-          <mat-card-title>{{ grupo.tela.nombre }}</mat-card-title>
+          <mat-card-title>{{ grupo.tela.nombre }}@if (grupo.tela.color) { &middot; {{ grupo.tela.color }} }</mat-card-title>
           <mat-card-subtitle>Costo: {{ grupo.tela.precio_costo | currency: 'MXN' }} / metro</mat-card-subtitle>
         </mat-card-header>
         <mat-card-content>

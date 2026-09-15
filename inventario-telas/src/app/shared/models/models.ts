@@ -28,6 +28,7 @@ export interface Tela {
   id: number;
   nombre: string;
   composicion: string;
+  color: string;
   precio_costo: number;
   activo: boolean;
   created_at: string;
@@ -110,6 +111,7 @@ export interface SaldoCliente {
 export interface RemisionConceptoLinea {
   tela_id: number;
   nombre_tela: string;
+  color: string;
   metros: number;
   precio_metro: number;
   importe: number;

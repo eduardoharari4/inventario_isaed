@@ -48,6 +48,7 @@ export class RemisionCrearComponent {
   preciosVenta = signal<Map<number, number | null>>(new Map());
   clienteId: number | null = null;
   condiciones = '';
+  fecha = new Date().toISOString().slice(0, 10);
   cargando = signal(true);
   guardando = signal(false);
 
@@ -173,7 +174,12 @@ export class RemisionCrearComponent {
 
     this.guardando.set(true);
     try {
-      const id = await this.remisionesService.crear(this.clienteId, this.condiciones, items);
+      const id = await this.remisionesService.crear(
+        this.clienteId,
+        this.condiciones,
+        items,
+        this.fecha
+      );
       this.snackBar.open('Remisión creada', 'Cerrar', { duration: 3000 });
       this.router.navigate(['/remisiones', id]);
     } catch (e: unknown) {

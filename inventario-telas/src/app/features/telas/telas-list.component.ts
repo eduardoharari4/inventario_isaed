@@ -39,7 +39,7 @@ export class TelasListComponent {
   filas = signal<TelaFila[]>([]);
   filtro = signal('');
   cargando = signal(true);
-  columnas = ['nombre', 'composicion', 'precio', 'rollos', 'metros', 'costo', 'acciones'];
+  columnas = ['nombre', 'composicion', 'color', 'precio', 'rollos', 'metros', 'costo', 'acciones'];
 
   constructor(
     private telasService: TelasService,
@@ -74,7 +74,10 @@ export class TelasListComponent {
     const f = this.filtro().trim().toLowerCase();
     if (!f) return this.filas();
     return this.filas().filter(
-      (t) => t.nombre.toLowerCase().includes(f) || t.composicion.toLowerCase().includes(f)
+      (t) =>
+        t.nombre.toLowerCase().includes(f) ||
+        t.composicion.toLowerCase().includes(f) ||
+        t.color.toLowerCase().includes(f)
     );
   }
 

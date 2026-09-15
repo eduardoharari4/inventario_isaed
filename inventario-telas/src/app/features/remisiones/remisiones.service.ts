@@ -44,6 +44,7 @@ export class RemisionesService {
         porTela.set(r.tela_id, {
           tela_id: r.tela_id,
           nombre_tela: r.tela.nombre,
+          color: r.tela.color,
           metros: Number(r.metros),
           precio_metro: Number(r.precio_metro),
           importe: Number(r.importe)
@@ -60,12 +61,14 @@ export class RemisionesService {
   async crear(
     clienteId: number,
     condiciones: string,
-    items: { rollo_id: number; precio_venta: number }[]
+    items: { rollo_id: number; precio_venta: number }[],
+    fecha: string
   ): Promise<number> {
     const { data, error } = await this.supabase.client.rpc('crear_remision', {
       p_cliente_id: clienteId,
       p_condiciones: condiciones,
-      p_items: items
+      p_items: items,
+      p_fecha: fecha
     });
     if (error) throw error;
     return data as number;

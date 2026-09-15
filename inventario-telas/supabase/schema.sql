@@ -97,6 +97,7 @@ create table public.telas (
   id bigint generated always as identity primary key,
   nombre text not null,
   composicion text not null default '',
+  color text not null default '',
   precio_costo numeric(10, 2) not null check (precio_costo >= 0),
   activo boolean not null default true,
   created_at timestamptz not null default now()
@@ -239,19 +240,15 @@ create policy empresa_select on public.empresa
 create policy empresa_update on public.empresa
   for update to authenticated using (public.es_admin());
 
--- telas / rollos / clientes: cualquier autenticado puede LEER (lo
--- necesita el flujo de crear remisión), pero solo admin puede crear,
--- editar o borrar — un vendedor solo hace remisiones, nada más.
-create policy telas_select on public.telas
-  for select to authenticated using (true);
-create policy telas_admin_write on public.telas
-  for all to authenticated using (public.es_admin()) with check (public.es_admin());
+-- telas / rollos: CRUD para cualquier autenticado — un vendedor también
+-- captura inventario (crea telas, agrega/edita/borra rollos).
+create policy telas_all on public.telas
+  for all to authenticated using (true) with check (true);
+create policy rollos_all on public.rollos
+  for all to authenticated using (true) with check (true);
 
-create policy rollos_select on public.rollos
-  for select to authenticated using (true);
-create policy rollos_admin_write on public.rollos
-  for all to authenticated using (public.es_admin()) with check (public.es_admin());
-
+-- clientes: cualquier autenticado puede LEER (lo necesita el flujo de
+-- crear remisión), pero solo admin puede crear, editar o borrar.
 create policy clientes_select on public.clientes
   for select to authenticated using (true);
 create policy clientes_admin_write on public.clientes
@@ -318,7 +315,7 @@ begin
     coalesce(r.total_cargos, 0) + coalesce(m.total_manual, 0) - coalesce(p.total_pagos, 0)
   from public.clientes c
   left join (
-    select rem.cliente_id, sum(rem.total) as total_cargos
+    select rem.cliente_id, sum(rem.subtotal) as total_cargos
     from public.remisiones rem
     where rem.estado = 'activa'
     group by rem.cliente_id
@@ -349,7 +346,8 @@ $$;
 create function public.crear_remision(
   p_cliente_id bigint,
   p_condiciones text,
-  p_items jsonb
+  p_items jsonb,
+  p_fecha date default current_date
 )
 returns bigint
 language plpgsql
@@ -387,8 +385,16 @@ begin
   v_iva := round(v_subtotal * 0.16, 2);
   v_total := v_subtotal + v_iva;
 
-  insert into public.remisiones (cliente_id, usuario_id, condiciones, subtotal, iva, total)
-  values (p_cliente_id, auth.uid(), coalesce(p_condiciones, ''), v_subtotal, v_iva, v_total)
+  insert into public.remisiones (cliente_id, usuario_id, condiciones, subtotal, iva, total, fecha)
+  values (
+    p_cliente_id,
+    auth.uid(),
+    coalesce(p_condiciones, ''),
+    v_subtotal,
+    v_iva,
+    v_total,
+    coalesce(p_fecha, current_date)
+  )
   returning id into v_remision_id;
 
   insert into public.remision_rollos (remision_id, rollo_id, tela_id, metros, precio_metro, importe)

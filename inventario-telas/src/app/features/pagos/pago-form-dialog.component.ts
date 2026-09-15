@@ -18,6 +18,7 @@ export class PagoFormDialogComponent {
   monto: number | null = null;
   formaPago = '';
   nota = '';
+  fecha = new Date().toISOString().slice(0, 10);
   guardando = signal(false);
   error = signal('');
 
@@ -39,7 +40,8 @@ export class PagoFormDialogComponent {
         cliente_id: this.data.clienteId,
         monto: this.monto,
         forma_pago: this.formaPago.trim(),
-        nota: this.nota.trim()
+        nota: this.nota.trim(),
+        fecha: this.fecha
       });
       this.ref.close(true);
     } catch (e: unknown) {

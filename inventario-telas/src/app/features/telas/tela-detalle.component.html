@@ -6,7 +6,7 @@
   <div class="encabezado">
     <div>
       <h2>{{ t.nombre }}</h2>
-      <p class="composicion">{{ t.composicion }}</p>
+      <p class="composicion">{{ t.composicion }}@if (t.color) { &middot; {{ t.color }} }</p>
       <p class="precio">{{ t.precio_costo | currency: 'MXN' }} costo / metro</p>
     </div>
     <div class="resumen">

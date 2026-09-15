@@ -12,6 +12,11 @@
     </mat-form-field>
 
     <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Fecha</mat-label>
+      <input matInput type="date" [(ngModel)]="fecha" name="fecha" />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
       <mat-label>Concepto (opcional)</mat-label>
       <input matInput [(ngModel)]="concepto" name="concepto" placeholder="ej. Saldo previo" />
     </mat-form-field>

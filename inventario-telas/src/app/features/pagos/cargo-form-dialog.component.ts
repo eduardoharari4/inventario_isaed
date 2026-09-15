@@ -17,6 +17,7 @@ import { mensajeError } from '../../shared/utils/errors';
 export class CargoFormDialogComponent {
   monto: number | null = null;
   concepto = '';
+  fecha = new Date().toISOString().slice(0, 10);
   guardando = signal(false);
   error = signal('');
 
@@ -37,7 +38,8 @@ export class CargoFormDialogComponent {
       await this.cargosService.registrar({
         cliente_id: this.data.clienteId,
         monto: this.monto,
-        concepto: this.concepto.trim()
+        concepto: this.concepto.trim(),
+        fecha: this.fecha
       });
       this.ref.close(true);
     } catch (e: unknown) {

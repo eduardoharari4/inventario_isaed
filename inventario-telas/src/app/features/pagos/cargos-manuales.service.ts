@@ -16,7 +16,9 @@ export class CargosManualesService {
     return data as CargoManual[];
   }
 
-  async registrar(cargo: Pick<CargoManual, 'cliente_id' | 'monto' | 'concepto'>): Promise<void> {
+  async registrar(
+    cargo: Pick<CargoManual, 'cliente_id' | 'monto' | 'concepto' | 'fecha'>
+  ): Promise<void> {
     const { data: userData } = await this.supabase.client.auth.getUser();
     const { error } = await this.supabase.client
       .from('cargos_manuales')
