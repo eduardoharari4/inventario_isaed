@@ -20,6 +20,18 @@ export class RemisionesService {
     return data as unknown as (Remision & { cliente: Cliente })[];
   }
 
+  /** Remisiones activas de un cliente (las que forman parte de su saldo pendiente). */
+  async listarPorCliente(clienteId: number): Promise<Remision[]> {
+    const { data, error } = await this.supabase.client
+      .from('remisiones')
+      .select('*')
+      .eq('cliente_id', clienteId)
+      .eq('estado', 'activa')
+      .order('folio', { ascending: false });
+    if (error) throw error;
+    return data as Remision[];
+  }
+
   async obtenerConDetalle(id: number): Promise<RemisionConDetalle> {
     const { data: remision, error } = await this.supabase.client
       .from('remisiones')

@@ -46,6 +46,26 @@
           <p>Pagos recibidos: {{ s.total_pagos | currency: 'MXN' }}</p>
         </div>
 
+        <h4>Notas de remisión</h4>
+        @if (remisionesDe(s.cliente_id).length === 0) {
+          <p class="sin-pagos">Sin notas de remisión activas.</p>
+        } @else {
+          <ul class="lista-pagos">
+            @for (r of remisionesDe(s.cliente_id); track r.id) {
+              <li>
+                <span>
+                  {{ r.fecha | date: 'dd/MM/yyyy' }} — Folio {{ r.folio }} —
+                  {{ r.subtotal | currency: 'MXN' }}
+                  @if (r.condiciones) { ({{ r.condiciones }}) }
+                </span>
+                <a mat-icon-button routerLink="/remisiones/{{ r.id }}" aria-label="Ver remisión">
+                  <mat-icon>visibility</mat-icon>
+                </a>
+              </li>
+            }
+          </ul>
+        }
+
         <h4>Deudas manuales (sin remisión)</h4>
         @if (cargosDe(s.cliente_id).length === 0) {
           <p class="sin-pagos">Sin deudas manuales registradas.</p>

@@ -1,6 +1,7 @@
 import { Component, signal } from '@angular/core';
 import { CurrencyPipe, DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { RouterLink } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -13,7 +14,8 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { SaldosService } from './saldos.service';
 import { PagosService } from '../pagos/pagos.service';
 import { CargosManualesService } from '../pagos/cargos-manuales.service';
-import { SaldoCliente, Pago, CargoManual } from '../../shared/models/models';
+import { RemisionesService } from '../remisiones/remisiones.service';
+import { SaldoCliente, Pago, CargoManual, Remision } from '../../shared/models/models';
 import { PagoFormDialogComponent } from '../pagos/pago-form-dialog.component';
 import { CargoFormDialogComponent } from '../pagos/cargo-form-dialog.component';
 
@@ -24,6 +26,7 @@ import { CargoFormDialogComponent } from '../pagos/cargo-form-dialog.component';
     CurrencyPipe,
     DatePipe,
     FormsModule,
+    RouterLink,
     MatButtonModule,
     MatIconModule,
     MatFormFieldModule,
@@ -43,11 +46,13 @@ export class SaldosComponent {
   cargando = signal(true);
   pagosPorCliente = signal<Map<number, Pago[]>>(new Map());
   cargosPorCliente = signal<Map<number, CargoManual[]>>(new Map());
+  remisionesPorCliente = signal<Map<number, Remision[]>>(new Map());
 
   constructor(
     private saldosService: SaldosService,
     private pagosService: PagosService,
     private cargosService: CargosManualesService,
+    private remisionesService: RemisionesService,
     private dialog: MatDialog,
     private snackBar: MatSnackBar
   ) {
@@ -102,6 +107,12 @@ export class SaldosComponent {
       mapa.set(clienteId, cargos);
       this.cargosPorCliente.set(mapa);
     }
+    if (!this.remisionesPorCliente().has(clienteId)) {
+      const remisiones = await this.remisionesService.listarPorCliente(clienteId);
+      const mapa = new Map(this.remisionesPorCliente());
+      mapa.set(clienteId, remisiones);
+      this.remisionesPorCliente.set(mapa);
+    }
   }
 
   historialDe(clienteId: number): Pago[] {
@@ -110,6 +121,10 @@ export class SaldosComponent {
 
   cargosDe(clienteId: number): CargoManual[] {
     return this.cargosPorCliente().get(clienteId) ?? [];
+  }
+
+  remisionesDe(clienteId: number): Remision[] {
+    return this.remisionesPorCliente().get(clienteId) ?? [];
   }
 
   private invalidarCache(clienteId: number) {
