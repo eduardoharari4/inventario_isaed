@@ -7,18 +7,18 @@
   <form class="form">
     <mat-form-field appearance="outline" class="full-width">
       <mat-label>Monto</mat-label>
-      <input matInput type="number" min="0.01" step="0.01" [(ngModel)]="monto" name="monto" required />
+      <input matInput spellcheck="false" autocorrect="off" autocapitalize="off" type="number" min="0.01" step="0.01" [(ngModel)]="monto" name="monto" required />
       <span matTextPrefix>$&nbsp;</span>
     </mat-form-field>
 
     <mat-form-field appearance="outline" class="full-width">
       <mat-label>Fecha</mat-label>
-      <input matInput type="date" [(ngModel)]="fecha" name="fecha" />
+      <input matInput spellcheck="false" autocorrect="off" autocapitalize="off" type="date" [(ngModel)]="fecha" name="fecha" />
     </mat-form-field>
 
     <mat-form-field appearance="outline" class="full-width">
       <mat-label>Concepto (opcional)</mat-label>
-      <input matInput [(ngModel)]="concepto" name="concepto" placeholder="ej. Saldo previo" />
+      <input matInput spellcheck="false" autocorrect="off" autocapitalize="off" [(ngModel)]="concepto" name="concepto" placeholder="ej. Saldo previo" />
     </mat-form-field>
 
     @if (error()) {

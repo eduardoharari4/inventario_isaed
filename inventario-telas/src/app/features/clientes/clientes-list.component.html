@@ -8,7 +8,7 @@
 
 <mat-form-field appearance="outline" class="filtro">
   <mat-label>Buscar por nombre</mat-label>
-  <input matInput [(ngModel)]="filtro" />
+  <input matInput spellcheck="false" autocorrect="off" autocapitalize="off" [(ngModel)]="filtro" />
 </mat-form-field>
 
 @if (cargando()) {

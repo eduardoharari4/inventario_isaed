@@ -1,5 +1,5 @@
 import { Component, signal } from '@angular/core';
-import { CurrencyPipe, DatePipe } from '@angular/common';
+import { CurrencyPipe, DatePipe, DecimalPipe } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -13,7 +13,7 @@ import { mensajeError } from '../../shared/utils/errors';
 @Component({
   selector: 'app-remision-detalle',
   standalone: true,
-  imports: [CurrencyPipe, DatePipe, RouterLink, MatButtonModule, MatIconModule],
+  imports: [CurrencyPipe, DatePipe, DecimalPipe, RouterLink, MatButtonModule, MatIconModule],
   templateUrl: './remision-detalle.component.html',
   styleUrl: './remision-detalle.component.scss'
 })

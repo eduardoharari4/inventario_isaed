@@ -6,6 +6,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { CargosManualesService } from './cargos-manuales.service';
 import { mensajeError } from '../../shared/utils/errors';
+import { redondear2 } from '../../shared/utils/numeros';
 
 @Component({
   selector: 'app-cargo-form-dialog',
@@ -37,7 +38,7 @@ export class CargoFormDialogComponent {
     try {
       await this.cargosService.registrar({
         cliente_id: this.data.clienteId,
-        monto: this.monto,
+        monto: redondear2(this.monto),
         concepto: this.concepto.trim(),
         fecha: this.fecha
       });

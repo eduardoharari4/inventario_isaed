@@ -8,22 +8,22 @@
     <mat-card-content class="form">
       <mat-form-field appearance="outline" class="full-width">
         <mat-label>Nombre de la empresa</mat-label>
-        <input matInput [(ngModel)]="e.nombre" name="nombre" />
+        <input matInput spellcheck="false" autocorrect="off" autocapitalize="off" [(ngModel)]="e.nombre" name="nombre" />
       </mat-form-field>
 
       <mat-form-field appearance="outline" class="full-width">
         <mat-label>RFC</mat-label>
-        <input matInput [(ngModel)]="e.rfc" name="rfc" />
+        <input matInput spellcheck="false" autocorrect="off" autocapitalize="off" [(ngModel)]="e.rfc" name="rfc" />
       </mat-form-field>
 
       <mat-form-field appearance="outline" class="full-width">
         <mat-label>Dirección</mat-label>
-        <input matInput [(ngModel)]="e.direccion" name="direccion" />
+        <input matInput spellcheck="false" autocorrect="off" autocapitalize="off" [(ngModel)]="e.direccion" name="direccion" />
       </mat-form-field>
 
       <mat-form-field appearance="outline" class="full-width">
         <mat-label>Teléfono</mat-label>
-        <input matInput [(ngModel)]="e.telefono" name="telefono" />
+        <input matInput spellcheck="false" autocorrect="off" autocapitalize="off" [(ngModel)]="e.telefono" name="telefono" />
       </mat-form-field>
 
       <button mat-flat-button color="primary" (click)="guardar()" [disabled]="guardando()">

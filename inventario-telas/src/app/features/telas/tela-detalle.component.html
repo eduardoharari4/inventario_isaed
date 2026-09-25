@@ -12,7 +12,7 @@
     <div class="resumen">
       <mat-chip-set>
         <mat-chip>{{ rollosDisponibles() }} rollos disponibles</mat-chip>
-        <mat-chip>{{ totalMetrosDisponibles() }} m disponibles</mat-chip>
+        <mat-chip>{{ totalMetrosDisponibles() | number: '1.0-2' }} m disponibles</mat-chip>
         <mat-chip>{{ totalMetrosDisponibles() * t.precio_costo | currency: 'MXN' }} en inventario</mat-chip>
       </mat-chip-set>
     </div>
@@ -22,7 +22,7 @@
     <mat-card-content class="agregar-form">
       <mat-form-field appearance="outline">
         <mat-label>Metros del rollo nuevo</mat-label>
-        <input matInput type="number" min="0.01" step="0.01" [(ngModel)]="metrosNuevoRollo" name="metros" />
+        <input matInput spellcheck="false" autocorrect="off" autocapitalize="off" type="number" min="0.01" step="0.01" [(ngModel)]="metrosNuevoRollo" name="metros" />
       </mat-form-field>
       <button mat-flat-button color="primary" (click)="agregarRollo()" [disabled]="agregando()">
         <mat-icon>add</mat-icon>
@@ -39,17 +39,49 @@
       @for (r of rollos(); track r.id) {
         <mat-card class="rollo-card" [class.vendido]="r.estado === 'vendido'">
           <mat-card-content>
-            @if (r.estado === 'disponible') {
-              <button
-                mat-icon-button
-                class="borrar-rollo"
-                (click)="eliminarRollo(r)"
-                aria-label="Borrar rollo"
-              >
-                <mat-icon>close</mat-icon>
-              </button>
+            @if (r.estado === 'disponible' && rolloEditandoId() !== r.id) {
+              <div class="acciones-rollo">
+                <button
+                  mat-icon-button
+                  class="editar-rollo"
+                  (click)="iniciarCorreccion(r)"
+                  aria-label="Corregir rollo"
+                >
+                  <mat-icon>edit</mat-icon>
+                </button>
+                <button
+                  mat-icon-button
+                  class="borrar-rollo"
+                  (click)="eliminarRollo(r)"
+                  aria-label="Borrar rollo"
+                >
+                  <mat-icon>close</mat-icon>
+                </button>
+              </div>
             }
-            <p class="metros">{{ r.metros }} m</p>
+            @if (rolloEditandoId() === r.id) {
+              <mat-form-field appearance="outline" class="editar-form">
+                <mat-label>Metros</mat-label>
+                <input
+                  matInput
+                  type="number"
+                  min="0.01"
+                  step="0.01"
+                  [(ngModel)]="metrosCorregidos"
+                  name="metrosCorregidos-{{ r.id }}"
+                />
+              </mat-form-field>
+              <div class="editar-acciones">
+                <button mat-icon-button (click)="guardarCorreccion(r)" [disabled]="corrigiendo()" aria-label="Guardar corrección">
+                  <mat-icon>check</mat-icon>
+                </button>
+                <button mat-icon-button (click)="cancelarCorreccion()" [disabled]="corrigiendo()" aria-label="Cancelar corrección">
+                  <mat-icon>close</mat-icon>
+                </button>
+              </div>
+            } @else {
+              <p class="metros">{{ r.metros | number: '1.0-2' }} m</p>
+            }
             <p class="estado">{{ r.estado === 'disponible' ? 'Disponible' : 'Vendido' }}</p>
             <p class="fecha">{{ r.created_at | date: 'dd/MM/yyyy' }}</p>
           </mat-card-content>

@@ -1,5 +1,5 @@
 import { Component, computed, signal } from '@angular/core';
-import { CurrencyPipe } from '@angular/common';
+import { CurrencyPipe, DecimalPipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
@@ -14,6 +14,7 @@ import { ClientesService } from '../clientes/clientes.service';
 import { TelasService } from '../telas/telas.service';
 import { RemisionesService } from './remisiones.service';
 import { Cliente, Rollo, Tela } from '../../shared/models/models';
+import { redondear2 } from '../../shared/utils/numeros';
 
 type RolloDisponible = Rollo & { tela: Tela };
 
@@ -27,6 +28,7 @@ interface GrupoTela {
   standalone: true,
   imports: [
     CurrencyPipe,
+    DecimalPipe,
     FormsModule,
     RouterLink,
     MatCardModule,
@@ -106,7 +108,7 @@ export class RemisionCrearComponent {
 
   setPrecioVenta(telaId: number, valor: number | null) {
     const mapa = new Map(this.preciosVenta());
-    mapa.set(telaId, valor);
+    mapa.set(telaId, valor === null ? null : redondear2(valor));
     this.preciosVenta.set(mapa);
   }
 

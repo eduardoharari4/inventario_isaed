@@ -1,5 +1,5 @@
 import { Component, signal } from '@angular/core';
-import { CurrencyPipe } from '@angular/common';
+import { CurrencyPipe, DecimalPipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
@@ -24,6 +24,7 @@ interface TelaFila extends Tela {
   standalone: true,
   imports: [
     CurrencyPipe,
+    DecimalPipe,
     FormsModule,
     MatButtonModule,
     MatIconModule,

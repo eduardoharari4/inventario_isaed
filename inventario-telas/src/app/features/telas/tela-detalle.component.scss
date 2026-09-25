@@ -43,10 +43,15 @@
   opacity: 0.55;
 }
 
-.borrar-rollo {
+.acciones-rollo {
   position: absolute;
   top: 0;
   right: 0;
+  display: flex;
+}
+
+.editar-rollo,
+.borrar-rollo {
   width: 28px;
   height: 28px;
   line-height: 28px;
@@ -57,6 +62,16 @@
     height: 16px;
     line-height: 16px;
   }
+}
+
+.editar-form {
+  width: 100%;
+}
+
+.editar-acciones {
+  display: flex;
+  justify-content: center;
+  gap: 4px;
 }
 
 .metros {

@@ -14,11 +14,11 @@
     <div class="fechas-personalizadas">
       <mat-form-field appearance="outline" class="filtro-fecha">
         <mat-label>Desde</mat-label>
-        <input matInput type="date" [(ngModel)]="desde" (change)="cargar()" />
+        <input matInput spellcheck="false" autocorrect="off" autocapitalize="off" type="date" [(ngModel)]="desde" (change)="cargar()" />
       </mat-form-field>
       <mat-form-field appearance="outline" class="filtro-fecha">
         <mat-label>Hasta</mat-label>
-        <input matInput type="date" [(ngModel)]="hasta" (change)="cargar()" />
+        <input matInput spellcheck="false" autocorrect="off" autocapitalize="off" type="date" [(ngModel)]="hasta" (change)="cargar()" />
       </mat-form-field>
     </div>
   }

@@ -8,7 +8,7 @@
 
 <mat-form-field appearance="outline" class="filtro">
   <mat-label>Buscar por nombre, composición o color</mat-label>
-  <input matInput [(ngModel)]="filtro" />
+  <input matInput spellcheck="false" autocorrect="off" autocapitalize="off" [(ngModel)]="filtro" />
 </mat-form-field>
 
 @if (cargando()) {
@@ -50,8 +50,8 @@
 
       <ng-container matColumnDef="metros">
         <th mat-header-cell *matHeaderCellDef class="col-num">Metros disp.</th>
-        <td mat-cell *matCellDef="let t" class="col-num">{{ t.metrosDisponibles }}</td>
-        <td mat-footer-cell *matFooterCellDef class="col-num">{{ totalMetros() }}</td>
+        <td mat-cell *matCellDef="let t" class="col-num">{{ t.metrosDisponibles | number: '1.0-2' }}</td>
+        <td mat-footer-cell *matFooterCellDef class="col-num">{{ totalMetros() | number: '1.0-2' }}</td>
       </ng-container>
 
       <ng-container matColumnDef="costo">

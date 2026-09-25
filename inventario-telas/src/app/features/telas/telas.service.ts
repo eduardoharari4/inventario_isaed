@@ -50,6 +50,12 @@ export class TelasService {
     if (error) throw error;
   }
 
+  /** Corrige los metros de un rollo ya registrado en inventario. */
+  async actualizarRollo(id: number, metros: number): Promise<void> {
+    const { error } = await this.supabase.client.from('rollos').update({ metros }).eq('id', id);
+    if (error) throw error;
+  }
+
   /** Rollos disponibles con su tela, para armar remisiones (todas las telas activas). */
   async listarRollosDisponibles(): Promise<(Rollo & { tela: Tela })[]> {
     const { data, error } = await this.supabase.client

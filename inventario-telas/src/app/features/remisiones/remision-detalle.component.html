@@ -51,7 +51,7 @@
       <tbody>
         @for (linea of r.lineas; track linea.tela_id) {
           <tr>
-            <td class="col-cant">{{ linea.metros }}</td>
+            <td class="col-cant">{{ linea.metros | number: '1.0-2' }}</td>
             <td>{{ linea.nombre_tela }}{{ linea.color ? ' ' + linea.color : '' }}</td>
             <td class="col-precio">{{ linea.precio_metro | currency: 'MXN' }}</td>
             <td class="col-importe">{{ linea.importe | currency: 'MXN' }}</td>

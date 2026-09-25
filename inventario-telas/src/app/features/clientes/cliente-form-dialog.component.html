@@ -3,27 +3,27 @@
   <form class="form">
     <mat-form-field appearance="outline" class="full-width">
       <mat-label>Nombre</mat-label>
-      <input matInput [(ngModel)]="nombre" name="nombre" required />
+      <input matInput spellcheck="false" autocorrect="off" autocapitalize="off" [(ngModel)]="nombre" name="nombre" required />
     </mat-form-field>
 
     <mat-form-field appearance="outline" class="full-width">
       <mat-label>Domicilio</mat-label>
-      <input matInput [(ngModel)]="domicilio" name="domicilio" />
+      <input matInput spellcheck="false" autocorrect="off" autocapitalize="off" [(ngModel)]="domicilio" name="domicilio" />
     </mat-form-field>
 
     <mat-form-field appearance="outline" class="full-width">
       <mat-label>Ciudad</mat-label>
-      <input matInput [(ngModel)]="ciudad" name="ciudad" />
+      <input matInput spellcheck="false" autocorrect="off" autocapitalize="off" [(ngModel)]="ciudad" name="ciudad" />
     </mat-form-field>
 
     <mat-form-field appearance="outline" class="full-width">
       <mat-label>Teléfono</mat-label>
-      <input matInput [(ngModel)]="telefono" name="telefono" />
+      <input matInput spellcheck="false" autocorrect="off" autocapitalize="off" [(ngModel)]="telefono" name="telefono" />
     </mat-form-field>
 
     <mat-form-field appearance="outline" class="full-width">
       <mat-label>Correo</mat-label>
-      <input matInput type="email" [(ngModel)]="email" name="email" />
+      <input matInput spellcheck="false" autocorrect="off" autocapitalize="off" type="email" [(ngModel)]="email" name="email" />
     </mat-form-field>
 
     @if (error()) {

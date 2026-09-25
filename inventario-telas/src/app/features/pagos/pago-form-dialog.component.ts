@@ -6,6 +6,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { PagosService } from './pagos.service';
 import { mensajeError } from '../../shared/utils/errors';
+import { redondear2 } from '../../shared/utils/numeros';
 
 @Component({
   selector: 'app-pago-form-dialog',
@@ -38,7 +39,7 @@ export class PagoFormDialogComponent {
     try {
       await this.pagosService.registrar({
         cliente_id: this.data.clienteId,
-        monto: this.monto,
+        monto: redondear2(this.monto),
         forma_pago: this.formaPago.trim(),
         nota: this.nota.trim(),
         fecha: this.fecha

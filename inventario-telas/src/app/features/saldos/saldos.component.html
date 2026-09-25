@@ -3,7 +3,7 @@
 <div class="filtros">
   <mat-form-field appearance="outline" class="filtro">
     <mat-label>Buscar cliente</mat-label>
-    <input matInput [(ngModel)]="filtro" />
+    <input matInput spellcheck="false" autocorrect="off" autocapitalize="off" [(ngModel)]="filtro" />
   </mat-form-field>
 
   <mat-checkbox [(ngModel)]="soloConSaldo">Solo con saldo pendiente</mat-checkbox>

@@ -5,6 +5,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { TelasService } from './telas.service';
+import { redondear2 } from '../../shared/utils/numeros';
 
 @Component({
   selector: 'app-tela-form-dialog',
@@ -35,7 +36,7 @@ export class TelaFormDialogComponent {
         nombre: this.nombre.trim(),
         composicion: this.composicion.trim(),
         color: this.color.trim(),
-        precio_costo: this.precioCosto
+        precio_costo: redondear2(this.precioCosto)
       });
       this.ref.close(true);
     } catch (e: unknown) {

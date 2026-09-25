@@ -3,23 +3,23 @@
   <form class="form">
     <mat-form-field appearance="outline" class="full-width">
       <mat-label>Monto</mat-label>
-      <input matInput type="number" min="0.01" step="0.01" [(ngModel)]="monto" name="monto" required />
+      <input matInput spellcheck="false" autocorrect="off" autocapitalize="off" type="number" min="0.01" step="0.01" [(ngModel)]="monto" name="monto" required />
       <span matTextPrefix>$&nbsp;</span>
     </mat-form-field>
 
     <mat-form-field appearance="outline" class="full-width">
       <mat-label>Fecha</mat-label>
-      <input matInput type="date" [(ngModel)]="fecha" name="fecha" />
+      <input matInput spellcheck="false" autocorrect="off" autocapitalize="off" type="date" [(ngModel)]="fecha" name="fecha" />
     </mat-form-field>
 
     <mat-form-field appearance="outline" class="full-width">
       <mat-label>Forma de pago</mat-label>
-      <input matInput [(ngModel)]="formaPago" name="formaPago" placeholder="ej. Efectivo, transferencia" />
+      <input matInput spellcheck="false" autocorrect="off" autocapitalize="off" [(ngModel)]="formaPago" name="formaPago" placeholder="ej. Efectivo, transferencia" />
     </mat-form-field>
 
     <mat-form-field appearance="outline" class="full-width">
       <mat-label>Nota (opcional)</mat-label>
-      <input matInput [(ngModel)]="nota" name="nota" />
+      <input matInput spellcheck="false" autocorrect="off" autocapitalize="off" [(ngModel)]="nota" name="nota" />
     </mat-form-field>
 
     @if (error()) {

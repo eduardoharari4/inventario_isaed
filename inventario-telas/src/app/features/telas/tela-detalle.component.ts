@@ -1,5 +1,5 @@
 import { Component, signal } from '@angular/core';
-import { CurrencyPipe, DatePipe } from '@angular/common';
+import { CurrencyPipe, DatePipe, DecimalPipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
@@ -12,6 +12,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { TelasService } from './telas.service';
 import { Rollo, Tela } from '../../shared/models/models';
 import { mensajeError } from '../../shared/utils/errors';
+import { redondear2 } from '../../shared/utils/numeros';
 
 @Component({
   selector: 'app-tela-detalle',
@@ -19,6 +20,7 @@ import { mensajeError } from '../../shared/utils/errors';
   imports: [
     CurrencyPipe,
     DatePipe,
+    DecimalPipe,
     FormsModule,
     RouterLink,
     MatCardModule,
@@ -37,6 +39,9 @@ export class TelaDetalleComponent {
   cargando = signal(true);
   metrosNuevoRollo: number | null = null;
   agregando = signal(false);
+  rolloEditandoId = signal<number | null>(null);
+  metrosCorregidos: number | null = null;
+  corrigiendo = signal(false);
 
   private telaId: number;
 
@@ -82,7 +87,7 @@ export class TelaDetalleComponent {
     }
     this.agregando.set(true);
     try {
-      await this.telasService.agregarRollo(this.telaId, this.metrosNuevoRollo);
+      await this.telasService.agregarRollo(this.telaId, redondear2(this.metrosNuevoRollo));
       this.metrosNuevoRollo = null;
       await this.cargar();
     } catch {
@@ -99,6 +104,34 @@ export class TelaDetalleComponent {
       await this.cargar();
     } catch (e: unknown) {
       this.snackBar.open(mensajeError(e, 'este rollo'), 'Cerrar', { duration: 6000 });
+    }
+  }
+
+  iniciarCorreccion(rollo: Rollo) {
+    this.rolloEditandoId.set(rollo.id);
+    this.metrosCorregidos = Number(rollo.metros);
+  }
+
+  cancelarCorreccion() {
+    this.rolloEditandoId.set(null);
+    this.metrosCorregidos = null;
+  }
+
+  async guardarCorreccion(rollo: Rollo) {
+    if (!this.metrosCorregidos || this.metrosCorregidos <= 0) {
+      this.snackBar.open('Ingresa los metros correctos del rollo', 'Cerrar', { duration: 3000 });
+      return;
+    }
+    this.corrigiendo.set(true);
+    try {
+      await this.telasService.actualizarRollo(rollo.id, redondear2(this.metrosCorregidos));
+      this.rolloEditandoId.set(null);
+      this.metrosCorregidos = null;
+      await this.cargar();
+    } catch (e: unknown) {
+      this.snackBar.open(mensajeError(e, 'este rollo'), 'Cerrar', { duration: 6000 });
+    } finally {
+      this.corrigiendo.set(false);
     }
   }
 }
